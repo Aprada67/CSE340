@@ -228,6 +228,10 @@ h3 {
   font-size: 1rem;
 }
 
+.error-404 {
+  padding: 1rem;
+}
+
 footer {
   padding: 1rem;
 }
