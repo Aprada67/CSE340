@@ -228,6 +228,45 @@ h3 {
   font-size: 1rem;
 }
 
+/* Vehicle detail */
+.vehicle-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.vehicle-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  display: block;
+}
+
+.vehicle-info {
+  font-family: system-ui, sans-serif;
+  font-size: 1rem;
+  color: #333;
+}
+
+.vehicle-info h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.vehicle-info p {
+  margin: 0.5rem 0;
+  line-height: 1.6;
+}
+
+.vehicle-info p strong {
+  display: inline-block;
+  width: 100px;
+  color: #555;
+}
+
 .error-404 {
   padding: 1rem;
 }
@@ -281,6 +320,26 @@ footer {
 
   #inv-display {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Vehicle Details */
+    .vehicle-detail {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+
+  .vehicle-image,
+  .vehicle-info {
+    flex: 1;
+  }
+
+  .vehicle-info h2 {
+    font-size: 2rem;
+  }
+
+  .vehicle-info {
+    padding-right: 2rem;
   }
 
 }
