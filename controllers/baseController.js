@@ -6,4 +6,8 @@ baseController.buildHome = async function(req, res){
   res.render("index", {title: "Home", nav})
 }
 
+baseController.triggerError = function (req, res, next) {
+  next({ status: 500, message: "Intentional server error! Something went wrong on purpose." })
+}
+
 module.exports = baseController

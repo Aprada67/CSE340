@@ -2,6 +2,7 @@
  * This server.js file is the primary file of the 
  * application. It is used to control the project.
  *******************************************/
+
 /* ***********************
  * Require Statements
  *************************/
@@ -17,6 +18,7 @@ const utilities = require("./utilities/")
 /* ***********************
  * Routes
  *************************/
+app.use(static)
 app.use(express.static("public"))
 app.set("view engine", "ejs")
 app.use(expressLayouts)
@@ -25,6 +27,8 @@ app.set("layout", "./layouts/layout")
 app.get("/", utilities.handleErrors(baseController.buildHome));
 // Inventory routes
 app.use("/inv", inventoryRoute)
+//Intentional Error Route
+app.get("/error-test", utilities.handleErrors(baseController.triggerError))
 // File Not Found Route - must be last route in list
 app.use(async (req, res, next) => {
   next({status: 404, message: 'Sorry, we appear to have lost that page.'})
@@ -38,7 +42,14 @@ app.use(async (req, res, next) => {
 app.use(async (err, req, res, next) => {
   let nav = await utilities.getNav()
   console.error(`Error at: "${req.originalUrl}": ${err.message}`)
-  if(err.status == 404){ message = err.message} else {message = 'Oh no! There was a crash. Maybe try a different route?'}
+  let message
+  if (err.message) {
+    message = err.message
+  } else if (err.status == 404) {
+    message = 'Sorry, we appear to have lost that page.'
+  } else {
+    message = 'Oh no! There was a crash. Maybe try a different route?'
+  }
   res.render("errors/error", {
     title: err.status || 'Server Error',
     message,
