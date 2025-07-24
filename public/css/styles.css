@@ -267,14 +267,121 @@ h3 {
   color: #555;
 }
 
+/* Login and register Form Wiew */
+.form-container {
+  margin: 2rem auto;
+  background-color: #f9f9f9;
+  padding: 2rem 2.5rem;
+  max-width: 400px;
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+label {
+  font-weight: 600;
+  color: #444;
+  font-size: 1rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  margin-bottom: .5rem;
+  padding: 12px 14px;
+  border: 1.8px solid #ccd6f6;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  outline-offset: 2px;
+  width: 100%;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: #3b82f6;
+  outline: none;
+}
+
+.password-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.password-container input {
+  flex-grow: 1;
+  margin-bottom: 0;
+}
+
+.password-container button {
+  background-color: #3b82f6;
+  border: none;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+
+.password-container button:hover {
+  background-color: #2563eb;
+}
+
+button[type="submit"] {
+  margin-top: 1rem;
+  background-color: #2563eb;
+  color: white;
+  padding: 14px 0;
+  font-weight: 700;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+button[type="submit"]:hover {
+  background-color: #1d4ed8;
+}
+
+/* Flash message */
+.welcome ul.notice {
+  position: absolute;
+  top: 24px;
+  left: 0;
+  z-index: 100;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+ul.notice {
+  color: red;
+  font-style: italic;
+  border-radius: 5px;
+  list-style: none;
+  font-weight: bold;
+}
+
+
+/* Errors */
 .error-404 {
   padding: 1rem;
 }
 
+/* Footer */
 footer {
   padding: 1rem;
 }
 
+/* Media Queries */
 @media (min-width: 600px) {
   #inv-display {
     grid-template-columns: repeat(2, 1fr);
