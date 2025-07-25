@@ -1,0 +1,63 @@
+<h1>
+    <%= title %>
+</h1>
+
+<% if (errors && errors.length> 0) { %>
+    <ul>
+        <% errors.forEach(error=> { %>
+            <li>
+                <%= error.msg %>
+            </li>
+            <% }) %>
+    </ul>
+    <% } %>
+
+        <% if (message) { %>
+            <p>
+                <%= message %>
+            </p>
+            <% } %>
+
+                <form method="post" action="/inv/add-inventory">
+                    <label for="classificationList">Classification</label>
+                    <%- classificationList %>
+
+                        <label for="invMake">Make</label>
+                        <input type="text" id="invMake" name="inv_make" required
+                            value="<%= data.inv_make ? data.inv_make : '' %>">
+
+                        <label for="invModel">Model</label>
+                        <input type="text" id="invModel" name="inv_model" required
+                            value="<%= data.inv_model ? data.inv_model : '' %>">
+
+                        <label for="invYear">Year</label>
+                        <input type="number" id="invYear" name="inv_year" required min="1900"
+                            max="<%= new Date().getFullYear() %>" value="<%= data.inv_year ? data.inv_year : '' %>">
+
+                        <label for="invPrice">Price</label>
+                        <input type="number" id="invPrice" name="inv_price" required step="0.01" min="0"
+                            value="<%= data.inv_price ? data.inv_price : '' %>">
+
+                        <label for="invMiles">Miles</label>
+                        <input type="number" id="invMiles" name="inv_miles" required min="0"
+                            value="<%= data.inv_miles ? data.inv_miles : '' %>">
+
+                        <label for="invColor">Color</label>
+                        <input type="text" id="invColor" name="inv_color" required
+                            value="<%= data.inv_color ? data.inv_color : '' %>">
+
+                        <label for="invDescription">Description</label>
+                        <textarea id="invDescription" name="inv_description" rows="4"
+                            cols="50"><%= data.inv_description ? data.inv_description : '' %></textarea>
+
+
+                        <label for="invImage">Image Path</label>
+                        <input type="text" id="invImage" name="inv_image"
+                            value="<%= data.inv_image ? data.inv_image : '/images/no-image-available.png' %>">
+
+                        <label for="invThumbnail">Thumbnail Path</label>
+                        <input type="text" id="invThumbnail" name="inv_thumbnail"
+                            value="<%= data.inv_thumbnail ? data.inv_thumbnail : '/images/no-image-available.png' %>">
+
+                        <button type="submit">Add Vehicle</button>
+                </form>

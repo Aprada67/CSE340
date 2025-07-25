@@ -1,0 +1,18 @@
+<% if (title) { %>
+  <h1><%= title %></h1>
+<% } else {
+  res.redirect('/')
+} %>
+
+<% if (messages().notice) { %>
+  <div class="flash-notice">
+    <%= messages().notice %>
+  </div>
+<% } %>
+
+<nav>
+  <ul class="inv-page">
+    <li><a href="/inv/add-classification">Add Classification</a></li>
+    <li><a href="/inv/add-inventory">Add Inventory Item</a></li>
+  </ul>
+</nav>

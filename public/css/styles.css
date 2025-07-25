@@ -268,14 +268,14 @@ h3 {
 }
 
 /* Login and register Form Wiew */
-.form-container {
+form {
   margin: 2rem auto;
   background-color: #f9f9f9;
   padding: 2rem 2.5rem;
   max-width: 400px;
   width: 100%;
   border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -289,7 +289,10 @@ label {
 
 input[type="text"],
 input[type="email"],
-input[type="password"] {
+input[type="password"],
+input[type="number"],
+textarea,
+form select {
   margin-bottom: .5rem;
   padding: 12px 14px;
   border: 1.8px solid #ccd6f6;
@@ -298,6 +301,10 @@ input[type="password"] {
   transition: border-color 0.3s ease;
   outline-offset: 2px;
   width: 100%;
+}
+
+textarea {
+  font-family: Arial, sans-serif;
 }
 
 input[type="text"]:focus,
@@ -370,6 +377,21 @@ ul.notice {
   font-weight: bold;
 }
 
+/* Inv menu */
+.inv-page {
+  display: flex;
+  justify-content: space-around;
+  margin: 2rem 0;
+}
+
+.inv-page li {
+  padding: 1rem;
+  background-color: lightskyblue;
+  border-radius: 4px;
+}
+
+/* New Inv Item */
+
 
 /* Errors */
 .error-404 {
@@ -430,7 +452,7 @@ footer {
   }
 
   /* Vehicle Details */
-    .vehicle-detail {
+  .vehicle-detail {
     flex-direction: row;
     align-items: flex-start;
     gap: 2rem;

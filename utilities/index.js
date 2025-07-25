@@ -81,6 +81,21 @@ Util.buildVehicleDetailHtml = function (vehicle) {
   `
 }
 
+/* **************************************
+* Build the classification List HTML
+* ************************************ */
+Util.buildClassificationList = async function (selectedClassificationId = null) {
+  let data = await invModel.getClassifications()
+  let classificationList = '<select name="classification_id" id="classificationList" required>'
+  classificationList += '<option value="">Choose a Classification</option>'
+  data.rows.forEach(row => {
+    classificationList += `<option value="${row.classification_id}"${selectedClassificationId == row.classification_id ? ' selected' : ''}>${row.classification_name}</option>`
+  })
+  classificationList += '</select>'
+  return classificationList
+}
+
+
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for 
