@@ -1,0 +1,27 @@
+<h1><%= title %></h1>
+
+<% if (errors && errors.length > 0) { %>
+  <ul>
+    <% errors.forEach(error => { %>
+      <li><%= error.msg %></li>
+    <% }) %>
+  </ul>
+<% } %>
+
+<% if (message && message.length > 0) { %>
+  <p><%= message %></p>
+<% } %>
+
+<form method="post" action="/inv/add-classification" novalidate>
+  <label for="classification_name">Classification Name</label>
+  <input
+    type="text"
+    name="classification_name"
+    id="classificationName"
+    pattern="^[A-Za-z0-9]+$"
+    title="No spaces or special characters allowed. Only letters and numbers."
+    required
+  >
+  <small>The classification name cannot contain spaces or special characters.</small>
+  <button type="submit">Add Classification</button>
+</form>
