@@ -4,11 +4,7 @@
   res.redirect('/')
 } %>
 
-<% if (messages().notice) { %>
-  <div class="flash-notice">
-    <%= messages().notice %>
-  </div>
-<% } %>
+<%- message %>
 
 <nav>
   <ul class="inv-page">

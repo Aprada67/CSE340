@@ -8,17 +8,36 @@ const invCont = {}
  *  Build inventory by classification view
  * ************************** */
 invCont.buildByClassificationId = async function (req, res, next) {
-  const classification_id = req.params.classificationId
-  const data = await invModel.getInventoryByClassificationId(classification_id)
-  const grid = await utilities.buildClassificationGrid(data)
-  let nav = await utilities.getNav()
-  const className = data[0].classification_name
-  res.render("./inventory/classification", {
-    title: className + " vehicles",
-    nav,
-    grid,
-  })
+  try {
+    const classification_id = req.params.classificationId
+    const data = await invModel.getInventoryByClassificationId(classification_id)
+
+    if (!data || data.length === 0) {
+      // Si no hay vehículos, mostrar mensaje amigable
+      let nav = await utilities.getNav()
+      return res.render("./inventory/classification", {
+        title: "No Vehicles Found",
+        nav,
+        grid: null,
+        message: "No vehicles available for this classification."
+      })
+    }
+
+    const grid = await utilities.buildClassificationGrid(data)
+    let nav = await utilities.getNav()
+    const className = data[0].classification_name
+
+    res.render("./inventory/classification", {
+      title: className + " vehicles",
+      nav,
+      grid,
+      message: null
+    })
+  } catch (error) {
+    next(error)
+  }
 }
+
 
 /* ***************************
  *  Build detail view

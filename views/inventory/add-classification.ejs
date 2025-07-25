@@ -8,10 +8,6 @@
   </ul>
 <% } %>
 
-<% if (message && message.length > 0) { %>
-  <p><%= message %></p>
-<% } %>
-
 <form method="post" action="/inv/add-classification" novalidate>
   <label for="classification_name">Classification Name</label>
   <input
