@@ -1,0 +1,38 @@
+<h1>
+    <%= title %>
+</h1>
+
+<% if (errors && errors.length> 0) { %>
+    <ul>
+        <% errors.forEach(error=> { %>
+            <li>
+                <%= error.msg %>
+            </li>
+            <% }) %>
+    </ul>
+    <% } %>
+
+<p>Confirm Deletion - This action is permanent and cannot be undone.</p>
+
+<form method="post" action="/inv/delete/<%= data.inv_id %>">
+
+    <label for="invMake">Make</label>
+    <input type="text" id="invMake" name="inv_make" readonly
+        value="<%= data.inv_make ? data.inv_make : '' %>">
+
+    <label for="invModel">Model</label>
+    <input type="text" id="invModel" name="inv_model" readonly
+        value="<%= data.inv_model ? data.inv_model : '' %>">
+
+    <label for="invYear">Year</label>
+    <input type="number" id="invYear" name="inv_year" readonly
+        value="<%= data.inv_year ? data.inv_year : '' %>">
+
+    <label for="invPrice">Price</label>
+    <input type="number" id="invPrice" name="inv_price" readonly
+        value="<%= data.inv_price ? data.inv_price : '' %>">
+
+    <input type="hidden" name="inv_id" value="<%= data.inv_id %>">
+
+    <button type="submit">Delete Vehicle</button>
+</form>

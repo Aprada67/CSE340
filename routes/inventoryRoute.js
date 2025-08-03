@@ -2,7 +2,13 @@
 const express = require("express")
 const router = new express.Router() 
 const invController = require("../controllers/invController")
-const { body } = require("express-validator");
+const { body } = require("express-validator")
+const utilities = require("../utilities/utilities")
+const {
+  newInventoryRules,
+  checkUpdateData,
+} = require("../utilities/inventory-validation");
+
 
 const validateInventory = [
   body('classification_id').notEmpty().withMessage('Classification is required'),
@@ -13,15 +19,19 @@ const validateInventory = [
   body('inv_miles').isInt({ min: 0 }).withMessage('Enter valid miles'),
   body('inv_color').trim().notEmpty().withMessage('Color is required'),
   body('inv_description').trim().notEmpty().withMessage('Description is required'),
-
 ]
-
 
 // Route to build management view
 router.get("/", invController.buildManagementView)
 
 // Route to build add classification view
 router.get("/add-classification", invController.buildAddClassificationView)
+
+// Route to show the edition form of a vehicle by its invId
+router.get(
+  "/edit/:invId",
+  utilities.handleErrors(invController.editInventoryView)
+);
 
 // POST route to add classification
 router.post(
@@ -33,16 +43,49 @@ router.post(
   invController.addClassification
 )
 
+router.post(
+  "/update/",
+  newInventoryRules(),
+  checkUpdateData,
+  utilities.handleErrors(invController.updateInventory)
+);
+
 // GET route to build add inventory view
 router.get("/add-inventory", invController.buildAddInventoryView)
 
 // POST route to add Inventory with validation
 router.post("/add-inventory", validateInventory, invController.addInventory)
 
+// Route to manage the inventary update
+router.post("/update/", invController.updateInventory)
+
 // Route to build inventory by classification view
 router.get("/type/:classificationId", invController.buildByClassificationId)
 
 // Route to build detail view
 router.get("/detail/:invId", invController.buildDetailView)
+
+// New route to return inventory JSON by classification
+router.get("/getInventory/:classification_id", utilities.handleErrors(invController.getInventoryJSON));
+
+// GET route to show delete confirmation view
+router.get('/delete/:inv_id', async (req, res) => {
+  try {
+    await invController.showDeleteConfirm(req, res)
+  } catch (error) {
+    console.error('Error showing delete confirmation:', error)
+    res.status(500).send('Internal server error while loading delete confirmation.')
+  }
+})
+
+// POST route to perform delete action
+router.post('/delete/:inv_id', async (req, res) => {
+  try {
+    await invController.deleteItem(req, res)
+  } catch (error) {
+    console.error('Error deleting item:', error)
+    res.status(500).send('Internal server error while deleting item.')
+  }
+})
 
 module.exports = router;
