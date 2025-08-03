@@ -8,6 +8,7 @@ const {
   newInventoryRules,
   checkUpdateData,
 } = require("../utilities/inventory-validation");
+const index = require("../utilities/index")
 
 
 const validateInventory = [
@@ -22,10 +23,10 @@ const validateInventory = [
 ]
 
 // Route to build management view
-router.get("/", invController.buildManagementView)
+// router.get("/", invController.buildManagementView)
 
 // Route to build add classification view
-router.get("/add-classification", invController.buildAddClassificationView)
+// router.get("/add-classification", invController.buildAddClassificationView)
 
 // Route to show the edition form of a vehicle by its invId
 router.get(
@@ -87,5 +88,15 @@ router.post('/delete/:inv_id', async (req, res) => {
     res.status(500).send('Internal server error while deleting item.')
   }
 })
+
+// Protected route (admin view)
+router.get("/", index.checkEmployeeOrAdmin, invController.buildManagementView)
+
+// Protected route to add classification
+router.get("/add-classification", index.checkEmployeeOrAdmin, invController.buildAddClassificationView)
+
+// Protected route to edit inventary
+router.get("/edit/:invId", index.checkEmployeeOrAdmin, invController.editInventoryView)
+
 
 module.exports = router;

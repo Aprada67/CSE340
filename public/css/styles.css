@@ -458,6 +458,43 @@ footer {
   text-decoration: underline;
 }
 
+/* Acount management */
+main.account-management {
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  color: #222;
+  max-width: 100%;
+  margin: 1rem auto;
+}
+
+main.account-management h1 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #2980b9;
+  padding-bottom: 0.3rem;
+}
+
+main.account-management h2,
+main.account-management h3 {
+  color: #2980b9;
+  margin-top: 1rem;
+}
+
+main.account-management p {
+  margin: 0.5rem 0;
+}
+
+main.account-management a {
+  color: #2980b9;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+main.account-management a:hover {
+  text-decoration: underline;
+}
+
 /* Media Queries */
 @media (min-width: 600px) {
   #inv-display {
@@ -554,6 +591,11 @@ footer {
 
   #inventoryDisplay td:last-child {
     border-bottom: 1px solid #ddd;
+  }
+
+  main.account-management {
+    max-width: 700px;
+    padding: 2rem;
   }
 
 }

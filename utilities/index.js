@@ -141,5 +141,32 @@ Util.checkJWTToken = (req, res, next) => {
   }
  }
 
+Util.checkEmployeeOrAdmin = function (req, res, next) {
+  const token = req.cookies.jwt
+
+  if (!token) {
+    req.flash("notice", "You must be logged in to access this page.")
+    return res.redirect("/account/login")
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+
+    if (decoded.account_type !== "Employee" && decoded.account_type !== "Admin") {
+      req.flash("notice", "You do not have permission to access that page.")
+      return res.redirect("/")
+    }
+
+    // Correct permisson
+    req.user = decoded
+    res.locals.accountData = decoded
+    return next()
+  } catch (err) {
+    console.error("JWT verification failed:", err.message)
+    req.flash("notice", "Session expired. Please log in again.")
+    res.clearCookie("jwt")
+    return res.redirect("/account/login")
+  }
+}
 
 module.exports = Util

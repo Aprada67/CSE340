@@ -115,5 +115,67 @@ validate.checkLoginData = async (req, res, next) => {
   next()
 }
 
+validate.updateAccountRules = () => {
+  return [
+    body("account_firstname")
+      .trim()
+      .notEmpty()
+      .withMessage("First name is required."),
+
+    body("account_lastname")
+      .trim()
+      .notEmpty()
+      .withMessage("Last name is required."),
+
+    body("account_email")
+      .trim()
+      .isEmail()
+      .normalizeEmail()
+      .withMessage("A valid email is required.")
+      .custom(async (account_email, { req }) => {
+        const accountId = req.body.account_id
+        const account = await accountModel.getAccountByEmail(account_email)
+
+        if (account && account.account_id != accountId) {
+          throw new Error("Email already in use by another account.")
+        }
+      }),
+  ]
+}
+
+validate.updatePasswordRules = () => {
+  return [
+    body("account_password")
+      .trim()
+      .notEmpty()
+      .isStrongPassword({
+        minLength: 12,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      })
+      .withMessage("Password does not meet security requirements."),
+  ]
+}
+
+validate.checkUpdateData = async (req, res, next) => {
+  let errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav()
+    const account = req.body
+    res.render("account/update-account", {
+      errors,
+      title: "Update Account",
+      nav,
+      account,
+      messages: req.flash()
+    })
+    return
+  }
+  next()
+}
+
+
 
 module.exports = validate

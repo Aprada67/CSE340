@@ -35,6 +35,12 @@ const cookieParser = require("cookie-parser")
 }))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
+// Middleware to pass session data to views
+app.use((req, res, next) => {
+  res.locals.loggedin = req.session.loggedin;
+  res.locals.firstname = req.session.firstname;
+  next();
+});
 
 // Express Messages Middleware
 app.use(require('connect-flash')())
