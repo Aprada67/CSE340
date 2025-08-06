@@ -110,7 +110,6 @@ async function accountLogin(req, res, next) {
         const match = await bcrypt.compare(account_password, accountData.account_password)
 
         if (match) {
-            // Remove password from session data
             delete accountData.account_password
 
             req.session.loggedin = true
@@ -152,10 +151,11 @@ async function buildAccount(req, res, next) {
             title: "Account Management",
             nav,
             errors: null,
-            messages: req.flash(),
             firstname: req.session.firstname,
             account_type: req.session.account_type,
-            account_id: req.session.account_id
+            account_id: req.session.account_id,
+            accountData: res.locals.accountData,
+            isEmployeeOrAdmin: res.locals.accountData.account_type === "Employee" || res.locals.accountData.account_type === "Admin"
         })
     } catch (error) {
         next(error)
@@ -180,7 +180,12 @@ async function buildUpdateAccount(req, res, next) {
             title: "Update Account",
             nav,
             errors: null,
-            account: accountData,
+            account: {
+                account_id: accountData.account_id,
+                account_firstname: accountData.account_firstname,
+                account_lastname: accountData.account_lastname,
+                account_email: accountData.account_email,
+            },
             messages: req.flash(),
         })
     } catch (error) {
@@ -194,21 +199,19 @@ async function buildUpdateAccount(req, res, next) {
 async function processUpdate(req, res, next) {
     const { account_id, account_firstname, account_lastname, account_email } = req.body;
     const errors = validationResult(req);
-
     let nav = await utilities.getNav()
 
     if (!errors.isEmpty()) {
         return res.status(400).render('account/update-account', {
             title: 'Update Account',
             nav,
-            errors: errors.array(),
+            errors: null,
             account: { account_id, account_firstname, account_lastname, account_email },
             messages: req.flash()
         });
     }
 
     try {
-        // Check if email is already used by another account
         const existingAccount = await accountModel.getAccountByEmail(account_email);
         if (existingAccount && existingAccount.account_id != account_id) {
             return res.status(400).render('account/update-account', {
@@ -220,7 +223,7 @@ async function processUpdate(req, res, next) {
             });
         }
 
-        const result = await accountModel.updateAccount(account_id, account_firstname, account_lastname, account_email);
+        const result = await accountModel.updateAccountInfo(account_id, account_firstname, account_lastname, account_email);
 
         if (result) {
             req.flash('success', 'Account information updated successfully.')
@@ -246,14 +249,13 @@ async function processUpdate(req, res, next) {
 async function processPasswordChange(req, res, next) {
     const { account_id, new_password } = req.body;
     const errors = validationResult(req);
-
     let nav = await utilities.getNav()
 
     if (!errors.isEmpty()) {
         return res.status(400).render('account/update-account', {
             title: 'Update Account',
             nav,
-            errors: errors.array(),
+            errors: null,
             account: { account_id },
             messages: req.flash()
         });
@@ -266,7 +268,7 @@ async function processPasswordChange(req, res, next) {
 
     try {
         const hashedPassword = await bcrypt.hash(new_password, 10);
-        const result = await accountModel.updatePassword(account_id, hashedPassword);
+        const result = await accountModel.updateAccountPassword(account_id, hashedPassword);
 
         if (result) {
             req.flash('success', 'Password changed successfully.')

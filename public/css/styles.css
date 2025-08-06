@@ -28,6 +28,45 @@ section {
   font-size: 2rem;
 }
 
+/* Header */
+
+#top-header {
+  align-items: center;
+  gap: 1rem;
+}
+
+#logoName {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #1e3a8a;
+  text-decoration: none;
+}
+
+#logoName:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+#tools {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+#tools a {
+  color: #1f2937;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#tools a:hover {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
 /* Nav Bar */
 .navbar {
   background-color: #222;
@@ -458,41 +497,50 @@ footer {
   text-decoration: underline;
 }
 
-/* Acount management */
-main.account-management {
-  padding: 1rem;
-  background-color: #f9f9f9;
+/* Account Management */
+#accountManagementPage {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+  padding: 0 1rem;
+}
+
+#accountManagementContainer {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+}
+
+#accountManagementContainer h2 {
+  font-size: 1.6rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.accountManagementLink {
+  display: block;
+  background-color: #2980b9;
+  color: #ffffff;
+  padding: 0.75rem 1rem;
   border-radius: 8px;
-  color: #222;
-  max-width: 100%;
-  margin: 1rem auto;
-}
-
-main.account-management h1 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  border-bottom: 2px solid #2980b9;
-  padding-bottom: 0.3rem;
-}
-
-main.account-management h2,
-main.account-management h3 {
-  color: #2980b9;
-  margin-top: 1rem;
-}
-
-main.account-management p {
-  margin: 0.5rem 0;
-}
-
-main.account-management a {
-  color: #2980b9;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: bold;
+  margin: 0.75rem 0;
+  transition: background-color 0.3s ease;
 }
 
-main.account-management a:hover {
-  text-decoration: underline;
+.accountManagementLink:hover {
+  background-color: #1c5980;
+}
+
+#accountManagementContainer h3 {
+  margin-top: 2rem;
+  font-size: 1.2rem;
+  color: #222;
 }
 
 /* Media Queries */
@@ -591,11 +639,6 @@ main.account-management a:hover {
 
   #inventoryDisplay td:last-child {
     border-bottom: 1px solid #ddd;
-  }
-
-  main.account-management {
-    max-width: 700px;
-    padding: 2rem;
   }
 
 }

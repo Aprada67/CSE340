@@ -1,65 +1,17 @@
-<main class="account-management">
-
-  <% if (messages) { %>
-    <% Object.keys(messages).forEach(type => { %>
-      <div class="<%= type %>">
-        <% messages[type].forEach(msg => { %>
-          <p><%= msg %></p>
-        <% }) %>
-      </div>
-    <% }) %>
-  <% } %>
-
-  <% if (errors && !errors.isEmpty()) { %>
-    <ul class="errors">
-      <% errors.array().forEach(error => { %>
-        <li><%= error.msg %></li>
-      <% }) %>
-    </ul>
-  <% } %>
-
+<main>
   <h1><%= title %></h1>
+      
+  <%- messages() %>
 
-  <!-- Account Update Form -->
-  <form action="/account/update" method="POST" novalidate>
-    <input type="hidden" name="account_id" value="<%= account_id %>">
+  <div id="accountManagementPage">
+      <div id="accountManagementContainer">
+          <h2 id="welcomemsg">Welcome <%= accountData.account_firstname %>!</h2>
+          <a href="/account/update/<%= accountData.account_id %>" class="accountManagementLink">Update Account Information</a>
 
-    <label for="first_name">First Name</label>
-    <input type="text" id="first_name" name="first_name" required
-      pattern="^[A-Za-zÀ-ÿ\s\-]{2,}$"
-      title="Please enter a valid first name (letters, spaces, and dashes only)."
-      value="<%= typeof first_name !== 'undefined' ? first_name : '' %>">
-
-    <label for="last_name">Last Name</label>
-    <input type="text" id="last_name" name="last_name" required
-      pattern="^[A-Za-zÀ-ÿ\s\-]{2,}$"
-      title="Please enter a valid last name (letters, spaces, and dashes only)."
-      value="<%= typeof last_name !== 'undefined' ? last_name : '' %>">
-
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" required
-      value="<%= typeof email !== 'undefined' ? email : '' %>">
-
-    <button type="submit" name="action" value="update">Update Account</button>
-  </form>
-
-  <hr>
-
-  <!-- Change Password Form -->
-  <form action="/account/update" method="POST" novalidate>
-    <input type="hidden" name="account_id" value="<%= account_id %>">
-
-    <label for="new_password">New Password</label>
-    <input type="password" id="new_password" name="new_password" minlength="8"
-      pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$"
-      title="Password must be at least 8 characters and include an uppercase letter, a number, and a special character.">
-
-    <small>
-      Enter a new password to change the current one.<br>
-      Must be 8+ chars, with uppercase, number &amp; special character.
-    </small>
-
-    <button type="submit" name="action" value="change_password">Change Password</button>
-  </form>
-
+          <% if (isEmployeeOrAdmin) { %>
+              <h3>Management Access Enabled</h3>
+              <a href="/inv/" class="accountManagementLink">Inventory Management</a>
+          <% } %>
+      </div>
+  </div>
 </main>
