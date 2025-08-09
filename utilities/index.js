@@ -1,3 +1,4 @@
+const { isFavorite } = require("../models/favorites-model")
 const invModel = require("../models/inventory-model")
 const Util = {}
 const jwt = require("jsonwebtoken")
@@ -29,43 +30,78 @@ Util.getNav = async function (req, res, next) {
 /* **************************************
 * Build the classification view HTML
 * ************************************ */
-Util.buildClassificationGrid = async function(data){
+Util.buildClassificationGrid = async function (data) {
   let grid
-  if(data.length > 0){
+  if (data.length > 0) {
     grid = '<ul id="inv-display">'
-    data.forEach(vehicle => { 
+    data.forEach(vehicle => {
       grid += '<li>'
-      grid +=  '<a href="../../inv/detail/'+ vehicle.inv_id 
-      + '" title="View ' + vehicle.inv_make + ' '+ vehicle.inv_model 
-      + 'details"><img src="' + vehicle.inv_thumbnail 
-      +'" alt="Image of '+ vehicle.inv_make + ' ' + vehicle.inv_model 
-      +' on CSE Motors" /></a>'
+      grid += '<a href="../../inv/detail/' + vehicle.inv_id
+        + '" title="View ' + vehicle.inv_make + ' ' + vehicle.inv_model
+        + 'details"><img src="' + vehicle.inv_thumbnail
+        + '" alt="Image of ' + vehicle.inv_make + ' ' + vehicle.inv_model
+        + ' on CSE Motors" /></a>'
       grid += '<div class="namePrice">'
       grid += '<hr />'
       grid += '<h2>'
-      grid += '<a href="../../inv/detail/' + vehicle.inv_id +'" title="View ' 
-      + vehicle.inv_make + ' ' + vehicle.inv_model + ' details">' 
-      + vehicle.inv_make + ' ' + vehicle.inv_model + '</a>'
+      grid += '<a href="../../inv/detail/' + vehicle.inv_id + '" title="View '
+        + vehicle.inv_make + ' ' + vehicle.inv_model + ' details">'
+        + vehicle.inv_make + ' ' + vehicle.inv_model + '</a>'
       grid += '</h2>'
-      grid += '<span>$' 
-      + new Intl.NumberFormat('en-US').format(vehicle.inv_price) + '</span>'
+      grid += '<span>$'
+        + new Intl.NumberFormat('en-US').format(vehicle.inv_price) + '</span>'
       grid += '</div>'
       grid += '</li>'
     })
     grid += '</ul>'
-  } else { 
+  } else {
     grid += '<p class="notice">Sorry, no matching vehicles could be found.</p>'
   }
   return grid
 }
 
-Util.buildVehicleDetailHtml = function (vehicle) {
+/* **************************************
+* Build the favorites view HTML
+* ************************************ */
+Util.buildFavoritesGrid = async function (data) {
+  let grid
+  if (data.length > 0) {
+    grid = '<ul id="inv-display">'
+    data.forEach(vehicle => {
+      grid += '<li>'
+      grid += '<a href="../../inv/detail/' + vehicle.inv_id
+        + '" title="View ' + vehicle.inv_make + ' ' + vehicle.inv_model
+        + ' details"><img src="' + vehicle.inv_thumbnail
+        + '" alt="Image of ' + vehicle.inv_make + ' ' + vehicle.inv_model
+        + ' on CSE Motors" /></a>'
+      grid += '<div class="namePrice">'
+      grid += '<hr />'
+      grid += '<h2>'
+      grid += '<a href="../../inv/detail/' + vehicle.inv_id + '" title="View '
+        + vehicle.inv_make + ' ' + vehicle.inv_model + ' details">'
+        + vehicle.inv_make + ' ' + vehicle.inv_model + '</a>'
+      grid += '</h2>'
+      grid += '<span>$'
+        + new Intl.NumberFormat('en-US').format(vehicle.inv_price) + '</span>'
+      grid += '</div>'
+      grid += '</li>'
+    })
+    grid += '</ul>'
+  } else {
+    grid = '<p class="notice">You don\'t have any vehicles marked as favorite.</p>'
+  }
+  return grid
+}
+
+Util.buildVehicleDetailHtml = function (vehicle, isFavorite) {
   const priceFormatted = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
   }).format(vehicle.inv_price)
 
   const milesFormatted = new Intl.NumberFormat("en-US").format(vehicle.inv_miles)
+
+  const favButtonLabel = isFavorite ? "Remove Favorite ❌" : "Add Favorite ❤️"
 
   return `
     <section class="vehicle-detail">
@@ -78,6 +114,11 @@ Util.buildVehicleDetailHtml = function (vehicle) {
         <p><strong>Kilometraje:</strong> ${milesFormatted} millas</p>
         <p><strong>Color:</strong> ${vehicle.inv_color}</p>
         <p><strong>Descripción:</strong> ${vehicle.inv_description}</p>
+
+        <form action="/favorites/toggle" method="POST">
+          <input type="hidden" name="inv_id" value="${vehicle.inv_id}">
+          <button type="submit" class="btn-fav">${favButtonLabel}</button>
+        </form>
       </div>
     </section>
   `
@@ -97,7 +138,6 @@ Util.buildClassificationList = async function (selectedClassificationId = null) 
   return classificationList
 }
 
-
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for 
@@ -110,36 +150,36 @@ Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)
 * Middleware to check token validity
 **************************************** */
 Util.checkJWTToken = (req, res, next) => {
- if (req.cookies.jwt) {
-  jwt.verify(
-   req.cookies.jwt,
-   process.env.ACCESS_TOKEN_SECRET,
-   function (err, accountData) {
-    if (err) {
-     req.flash("Please log in")
-     res.clearCookie("jwt")
-     return res.redirect("/account/login")
-    }
-    res.locals.accountData = accountData
-    res.locals.loggedin = 1
+  if (req.cookies.jwt) {
+    jwt.verify(
+      req.cookies.jwt,
+      process.env.ACCESS_TOKEN_SECRET,
+      function (err, accountData) {
+        if (err) {
+          req.flash("Please log in")
+          res.clearCookie("jwt")
+          return res.redirect("/account/login")
+        }
+        res.locals.accountData = accountData
+        res.locals.loggedin = 1
+        next()
+      })
+  } else {
     next()
-   })
- } else {
-  next()
- }
+  }
 }
 
 /* ****************************************
  *  Check Login
  * ************************************ */
- Util.checkLogin = (req, res, next) => {
+Util.checkLogin = (req, res, next) => {
   if (res.locals.loggedin) {
     next()
   } else {
     req.flash("notice", "Please log in.")
     return res.redirect("/account/login")
   }
- }
+}
 
 Util.checkEmployeeOrAdmin = function (req, res, next) {
   const token = req.cookies.jwt

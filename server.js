@@ -19,6 +19,7 @@ const pool = require('./database/')
 const accountRouter = require("./routes/accountRoute")
 const bodyParser = require("body-parser")
 const cookieParser = require("cookie-parser")
+const favoritesRouter = require("./routes/favoritesRoute");
 
 /* ***********************
  * Middleware
@@ -65,8 +66,11 @@ app.use('/account', accountRouter)
 // Index route
 app.get("/", utilities.handleErrors(baseController.buildHome))
 
-// Inventory routes
+// Inventory route
 app.use("/inv", inventoryRoute)
+
+// Favorites route
+app.use("/favorites", favoritesRouter)
 
 //Intentional Error Route
 app.get("/error-test", utilities.handleErrors(baseController.triggerError))

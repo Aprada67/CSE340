@@ -1,6 +1,7 @@
 const invModel = require("../models/inventory-model")
 const utilities = require("../utilities/")
 const { validationResult } = require('express-validator')
+const favoritesModel = require("../models/favorites-model")
 
 const invCont = {}
 
@@ -60,12 +61,15 @@ invCont.buildDetailView = async function (req, res, next) {
     }
 
     const nav = await utilities.getNav()
-    const vehicleHtml = utilities.buildVehicleDetailHtml(vehicle)
+    const userId = res.locals.accountData ? res.locals.accountData.account_id : null
+    const isFavorite = userId ? await favoritesModel.isFavorite(userId, invId) : false
+    const vehicleHtml = utilities.buildVehicleDetailHtml(vehicle, isFavorite)
 
     res.render("./inventory/vehicle-detail", {
       title: `${vehicle.inv_make} ${vehicle.inv_model}`,
       nav,
-      vehicleHtml
+      vehicleHtml,
+      isFavorite
     })
   } catch (error) {
     next(error)

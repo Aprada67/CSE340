@@ -1,13 +1,14 @@
 <header id="top-header">
-  <span class="siteName">
-    <a href="/" id="logoName" title="Return to home page">CSE Motors</a>
-  </span>
-  <div id="tools">
+    <span class="siteName">
+        <a href="/" id="logoName" title="Return to home page">CSE Motors</a>
+    </span>
+    <div id="tools">
     <% if (loggedin) { %>
-      <a href="/account" title="Go to account management">Welcome <%= firstname %></a>
-      <a href="/account/logout" title="Log out of your account">Logout</a>
+        <a href="/favorites" title="See your favorite vehicles">Favorites</a>
+        <a href="/account" title="Go to account management">Welcome <%= firstname %></a>
+        <a href="/account/logout" title="Log out of your account">Logout</a>
     <% } else { %>
-      <a href="/account/login" title="Click to log in">My Account</a>
+        <a href="/account/login" title="Click to log in">My Account</a>
     <% } %>
   </div>
 </header>
